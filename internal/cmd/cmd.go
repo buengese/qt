@@ -97,6 +97,7 @@ func ParseFlags() bool {
 }
 
 func InitEnv(target string, docker bool, path string) {
+	fmt.Printf("InitEnv(%s)\n", target)
 	if docker || target != runtime.GOOS || ((runtime.GOARCH != "amd64" || utils.GOARCH() != "amd64") && runtime.GOOS != "windows") {
 		return
 	}
@@ -571,6 +572,7 @@ func virtual(arg []string, target, path string, writeCacheToHost bool, docker bo
 }
 
 func BuildEnv(target, name, depPath string) (map[string]string, []string, []string, string) {
+	fmt.Printf("BuildEnv(target = %s, name = %s, depPath = %s)\n", target, name, depPath)
 
 	var (
 		tags    []string
@@ -906,6 +908,29 @@ func BuildEnv(target, name, depPath string) (map[string]string, []string, []stri
 
 			//TODO: move flags into template_cgo_qmake ?
 			"CGO_LDFLAGS": "--sysroot=/srv/mer/targets/SailfishOS-" + utils.QT_SAILFISH_VERSION() + "-armv7hl/",
+		}
+
+	case "asteroid":
+		tags = []string{target}
+		ldFlags = []string{"-s", "-w"}
+		out = filepath.Join(depPath, name)
+		env = map[string]string{
+			"PATH":   os.Getenv("PATH"),
+			"GOPATH": utils.GOPATH(),
+			"GOROOT": runtime.GOROOT(),
+
+			"GOOS":   "linux",
+			"GOARCH": "arm",
+			"GOARM":  "7",
+
+			"CGO_ENABLED": "1",
+			"CC":          "/usr/local/oecore-x86_64/sysroots/x86_64-oesdk-linux/usr/bin/arm-oe-linux-gnueabi/arm-oe-linux-gnueabi-gcc -march=armv7ve -mfpu=neon -mfloat-abi=hard",
+			"CXX":         "/usr/local/oecore-x86_64/sysroots/x86_64-oesdk-linux/usr/bin/arm-oe-linux-gnueabi/arm-oe-linux-gnueabi-gcc -march=armv7ve -mfpu=neon -mfloat-abi=hard",
+
+			"CPATH":        "/usr/local/oecore-x86_64/sysroots/armv7vehf-neon-oe-linux-gnueabi/usr/include",
+			"LIBRARY_PATH": "/usr/local/oecore-x86_64/sysroots/armv7vehf-neon-oe-linux-gnueabi/usr/lib",
+
+			"CGO_LDFLAGS": "--sysroot=/usr/local/oecore-x86_64/sysroots/armv7vehf-neon-oe-linux-gnueabi",
 		}
 
 	case "sailfish-emulator":

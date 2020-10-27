@@ -14,6 +14,7 @@ import (
 )
 
 func GoTemplate(module string, stub bool, mode int, pkg, target, tags string) []byte {
+	fmt.Printf("GoTemplate(module = %s, stub = %v, mode = %d, pkg = %s, target = %s, tags = %s)\n", module, stub, mode, pkg, target, tags)
 
 	if !utils.QT_GEN_GO_WRAPPER() && module == "AndroidExtras" {
 		utils.Save(utils.GoQtPkgPath(strings.ToLower(module), "utils-androidextras_android.go"), utils.Load(filepath.Join(strings.TrimSpace(utils.GoListOptional("{{.Dir}}", "github.com/therecipe/qt/internal", "-find", "get files dir")), "/binding/files/utils-androidextras_android.go")))
@@ -1394,6 +1395,7 @@ default:
 }
 
 func preambleGo(oldModule string, module string, input []byte, stub bool, mode int, pkg, target, tags string, tsd *bytes.Buffer) []byte {
+	fmt.Printf("preambleGo(oldModule = %s, module = %s, input = buf, stub = %v, mode = %d, pkg = %s, target = %s, tags = %s)\n", oldModule, module, stub, mode, pkg, target, tags)
 	bb := new(bytes.Buffer)
 	defer bb.Reset()
 	tsdbb := new(bytes.Buffer)
@@ -1478,6 +1480,7 @@ import "C"
 		}
 	}
 
+	fmt.Printf("preambleGo() preimport parser.LibDeps[parser.MOC] = %v\n", parser.LibDeps[parser.MOC])
 	var dartInput []string
 	fmt.Fprint(bb, "import (\n")
 	for _, m := range append(parser.GetLibs(), "qt", "strings", "unsafe", "log", "runtime", "fmt", "errors", "js", "time", "hex", "reflect", "math", "sync", "strconv", "internal", "gow") {
@@ -1595,6 +1598,7 @@ import "C"
 			}
 		}
 	}
+	fmt.Printf("preambleGo() parser.LibDeps[parser.MOC] = %v\n", parser.LibDeps[parser.MOC])
 
 	if mode == MOC {
 		env, tagsEnv, _, _ := cmd.BuildEnv(target, "", "")

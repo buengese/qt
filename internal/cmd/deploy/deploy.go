@@ -1,6 +1,7 @@
 package deploy
 
 import (
+	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -19,6 +20,7 @@ import (
 
 func Deploy(mode, target, path string, docker bool, ldFlags, tags string, fast bool, device string, vagrant bool, vagrantsystem string, comply bool, useuic bool, quickcompiler bool) {
 	defer func() { parser.State.ClassMap = make(map[string]*parser.Class) }()
+	fmt.Printf("Deploy(%s, %s, %s, ...,, ldFlags = %s, tags = %s, device = %s)\n", mode, target, path, ldFlags, tags, device)
 
 	utils.Log.WithField("mode", mode).WithField("target", target).WithField("path", path).WithField("docker", docker).
 		WithField("ldFlags", ldFlags).WithField("fast", fast).WithField("comply", comply).

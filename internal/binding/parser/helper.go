@@ -306,9 +306,16 @@ func shouldBuildForTarget(module, target string, min bool) bool {
 			return false
 		}
 
-	case "sailfish", "sailfish-emulator", "asteroid":
+	case "sailfish", "sailfish-emulator":
 		{
 			if !IsWhiteListedSailfishLib(module) {
+				return false
+			}
+		}
+
+	case "asteroid":
+		{
+			if !IsWhiteListedAsteroidLib(module) {
 				return false
 			}
 		}
@@ -353,6 +360,16 @@ func shouldBuildForTarget(module, target string, min bool) bool {
 func IsWhiteListedSailfishLib(name string) bool {
 	switch name {
 	case "Sailfish", "Core", "Quick", "Qml", "Network", "Gui", "Concurrent", "Multimedia", "Sql", "Svg", "XmlPatterns", "Xml", "DBus", "WebKit", "Sensors", "Positioning":
+		return true
+
+	default:
+		return false
+	}
+}
+
+func IsWhiteListedAsteroidLib(name string) bool {
+	switch name {
+	case "Core", "Quick", "Qml", "Network", "Gui", "Concurrent", "Multimedia", "Sql", "Svg", "XmlPatterns", "Xml", "DBus", "WebKit", "Sensors", "Positioning":
 		return true
 
 	default:

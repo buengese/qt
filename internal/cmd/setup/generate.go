@@ -2,6 +2,7 @@ package setup
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -54,12 +55,16 @@ func Generate(target string, docker, vagrant bool) {
 		utils.Log.Infof("generating %v qt/%v%v", mode, strings.ToLower(module), license)
 
 		if target == runtime.GOOS || utils.QT_FAT() || (mode == "full" && (target == "js" || target == "wasm")) { //TODO: REVIEW
+			fmt.Println("setup>generate(): Call GenModule")
 			templater.GenModule(module, target, templater.NONE)
 		} else {
+			fmt.Println("setup>generate(): Call CgoTemplate")
+			log.Fatal("Attempting to generate minimal!")
 			templater.CgoTemplate(module, "", target, templater.MINIMAL, "", "") //TODO: collect errors
 		}
 
 		if utils.QT_DYNAMIC_SETUP() && mode == "full" && (target != "js" && target != "wasm") {
+			fmt.Println("setup>generate(): Call ParseCgo")
 			cc, _ := templater.ParseCgo(strings.ToLower(module), target)
 			if cc != "" {
 				cmd := exec.Command("go", "tool", "cgo", utils.GoQtPkgPath(strings.ToLower(module), strings.ToLower(module)+".go"))

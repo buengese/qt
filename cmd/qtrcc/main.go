@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -84,6 +85,7 @@ func main() {
 		target = runtime.GOOS
 	}
 	utils.CheckBuildTarget(target, docker)
+	fmt.Println("CheckBuildTarget()")
 
 	if !filepath.IsAbs(path) {
 		oPath := path

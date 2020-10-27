@@ -21,6 +21,7 @@ import (
 )
 
 func Minimal(path, target, tags string, skipSetup bool) {
+	fmt.Printf("Minimal(%s, %s)\n", path, target)
 	rootPath := path
 	defer func() {
 		if cmd.ImportsQmlOrQuick() || cmd.ImportsInterop() { //TODO: and not deploying + reinstate on moc.moc with deploying ?
@@ -56,7 +57,9 @@ func Minimal(path, target, tags string, skipSetup bool) {
 				utils.RunCmdOptional(cmd, "go get docs") //TODO: this can fail if QT_PKG_CONFIG
 			}
 
-			if strings.HasPrefix(target, "sailfish") || strings.HasPrefix(target, "android") { //TODO: generate android and sailfish minimal instead
+			if strings.HasPrefix(target, "sailfish") || strings.HasPrefix(target, "android") || strings.HasPrefix(target, "asteroid") { //TODO: generate android and sailfish minimal instead
+				fmt.Println("Minimal() at //TODO: generate android and sailfish minimal instead")
+				fmt.Printf("%s generate %s", filepath.Join(utils.GOBIN(), "qtsetup"), target)
 				cmd := exec.Command(filepath.Join(utils.GOBIN(), "qtsetup"), "generate", target)
 				cmd.Dir = path
 				utils.RunCmd(cmd, "run setup")
@@ -212,7 +215,7 @@ func Minimal(path, target, tags string, skipSetup bool) {
 			if err != nil {
 				continue
 			}
-			if since >= 5.7 || !parser.IsWhiteListedSailfishLib(strings.TrimPrefix(c.Module, "Qt")) {
+			if since >= 5.7 || !parser.IsWhiteListedAsteroidLib(strings.TrimPrefix(c.Module, "Qt")) {
 				c.Export = false
 				delete(parser.State.ClassMap, c.Name)
 				continue

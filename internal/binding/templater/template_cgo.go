@@ -226,6 +226,10 @@ func cgoAsteroid(module, mocPath string, mode int, pkg string) {
 	tmp = strings.Replace(tmp, "i486", "armv7ve", -1)
 
 	switch {
+	case mode == RCC:
+		{
+			utils.Save(filepath.Join(mocPath, "rcc_cgo_asteroid_linux_arm.go"), tmp)
+		}
 	case mode == MOC:
 		{
 			utils.Save(filepath.Join(mocPath, "moc_cgo_asteroid_linux_arm.go"), tmp)

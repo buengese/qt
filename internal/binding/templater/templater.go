@@ -1,6 +1,7 @@
 package templater
 
 import (
+	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -36,19 +37,7 @@ func GenModule(m, target string, mode int) {
 	}
 
 	if mode == MINIMAL { //TODO: dead code ?
-		if suffix != "" {
-			return
-		}
-
-		utils.SaveBytes(utils.GoQtPkgPath(strings.ToLower(m), strings.ToLower(m)+"-minimal.cpp"), CppTemplate(m, mode, target, ""))
-		utils.SaveBytes(utils.GoQtPkgPath(strings.ToLower(m), strings.ToLower(m)+"-minimal.h"), HTemplate(m, mode, ""))
-		utils.SaveBytes(utils.GoQtPkgPath(strings.ToLower(m), strings.ToLower(m)+"-minimal.go"), GoTemplate(m, false, mode, m, target, ""))
-
-		if !(UseStub(false, "Qt"+m, mode) || utils.QT_GEN_GO_WRAPPER()) {
-			CgoTemplate(m, "", target, mode, m, "")
-		}
-
-		return
+		log.Fatal("Reached dead code\n")
 	}
 
 	if !(UseStub(false, "Qt"+m, mode) || utils.QT_GEN_GO_WRAPPER()) {

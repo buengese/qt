@@ -21,6 +21,7 @@ var exportedFunctions []string
 var CleanupDepsForCI = func() {}
 
 func CppTemplate(module string, mode int, target, tags string) []byte {
+	fmt.Printf("CppTemplate(module = %s, mode = %v, target = %s, tags = %s)\n", module, mode, target, tags)
 	utils.Log.WithField("module", module).Debug("generating cpp")
 	exportedFunctions = make([]string, 0)
 	parser.State.Target = target
@@ -512,6 +513,7 @@ func CppTemplate(module string, mode int, target, tags string) []byte {
 }
 
 func preambleCpp(module string, input []byte, mode int, target, tags string) []byte {
+	fmt.Printf("preambleCpp(%s, .., %s)\n", module, target)
 	var bb = new(bytes.Buffer)
 	defer bb.Reset()
 
@@ -735,6 +737,12 @@ extern "C" int32_t __isPlatformVersionAtLeast(int32_t Platform, int32_t Major, i
 
 			if strings.HasPrefix(parser.State.Target, "sailfish") {
 				if !parser.IsWhiteListedSailfishLib(strings.TrimPrefix(c.Module, "Qt")) {
+					continue
+				}
+			}
+
+			if strings.HasPrefix(parser.State.Target, "asteroid") {
+				if !parser.IsWhiteListedAsteroidLib(strings.TrimPrefix(c.Module, "Qt")) {
 					continue
 				}
 			}

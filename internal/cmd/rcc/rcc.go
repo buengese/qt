@@ -25,6 +25,7 @@ var (
 )
 
 func Rcc(path, target, tagsCustom, output_dir string, useuic, quickcompiler, deploying bool, skipSetup bool) {
+	fmt.Printf("Rcc(%s, %s, %s, ...)\n", path, target, tagsCustom)
 	if utils.UseGOMOD(path) && !skipSetup {
 		if !utils.ExistsDir(filepath.Join(filepath.Dir(utils.GOMOD(path)), "vendor")) {
 			cmd := exec.Command("go", "mod", "vendor")
@@ -38,7 +39,9 @@ func Rcc(path, target, tagsCustom, output_dir string, useuic, quickcompiler, dep
 				utils.RunCmdOptional(cmd, "go get docs") //TODO: this can fail if QT_PKG_CONFIG
 			}
 
-			if strings.HasPrefix(target, "sailfish") || strings.HasPrefix(target, "android") { //TODO: generate android and sailfish minimal instead
+			if strings.HasPrefix(target, "sailfish") || strings.HasPrefix(target, "android") || strings.HasPrefix(target, "asteroid") { //TODO: generate android and sailfish minimal instead
+				fmt.Println("Rc() at //TODO: generate android and sailfish minimal instead")
+				fmt.Printf("%s generate %s\n", filepath.Join(utils.GOBIN(), "qtsetup"), target)
 				cmd := exec.Command(filepath.Join(utils.GOBIN(), "qtsetup"), "generate", target)
 				cmd.Dir = path
 				utils.RunCmd(cmd, "run setup")
@@ -60,11 +63,13 @@ func Rcc(path, target, tagsCustom, output_dir string, useuic, quickcompiler, dep
 }
 
 func rcc(path, target, tagsCustom, output_dir string, quickcompiler bool, useuic bool, root bool) {
+	fmt.Printf("rcc(%s, %s, %s, ...)\n", path, target, tagsCustom)
 	utils.Log.WithField("path", path).WithField("target", target).Debug("start Rcc")
 
 	//TODO: cache non go asset (*.qml, *.js, *.ui, ...) hashes in rcc.go files to indentify staled assets in cached go packages
 	//TODO: pure go rcc file generation for wasm/js targets (needed for more convenient -fast mode)
 
+	fmt.Printf("rcc: root: %v\n", root)
 	if root {
 		wg := new(sync.WaitGroup)
 		defer wg.Wait()
@@ -781,12 +786,14 @@ func rcc(path, target, tagsCustom, output_dir string, quickcompiler bool, useuic
 	rccCpp := filepath.Join(path, "rcc.cpp")
 	if output_dir != "" {
 		rccCpp = filepath.Join(output_dir, "rcc.cpp")
+		fmt.Println("Run templater")
 		templater.CgoTemplateSafe(pkg, output_dir, target, templater.RCC, "", "", libs)
 	} else {
 		templater.CgoTemplateSafe(pkg, path, target, templater.RCC, "", "", libs)
 	}
 
 	if dir := filepath.Join(path, "qml"); utils.ExistsDir(dir) {
+		fmt.Printf("%s -project -o %s\n", utils.ToolPath("rcc", target), rccQrc)
 		rcc := exec.Command(utils.ToolPath("rcc", target), "-project", "-o", rccQrc)
 		rcc.Dir = dir
 		utils.RunCmd(rcc, fmt.Sprintf("execute rcc *.qrc on %v for %v", runtime.GOOS, target))

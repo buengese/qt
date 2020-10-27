@@ -51,7 +51,9 @@ var (
 )
 
 func Moc(path, target, tags string, fast, slow, deploying bool, skipSetup bool) {
+	fmt.Printf("Moc(%s, %s, %s)\n", path, target, tags)
 	if utils.UseGOMOD(path) && !skipSetup {
+		fmt.Println("Moc()->UseGomod()")
 		if !utils.ExistsDir(filepath.Join(filepath.Dir(utils.GOMOD(path)), "vendor")) {
 			cmd := exec.Command("go", "mod", "vendor")
 			cmd.Dir = path
@@ -64,7 +66,9 @@ func Moc(path, target, tags string, fast, slow, deploying bool, skipSetup bool) 
 				utils.RunCmdOptional(cmd, "go get docs") //TODO: this can fail if QT_PKG_CONFIG
 			}
 
-			if strings.HasPrefix(target, "sailfish") || strings.HasPrefix(target, "android") { //TODO: generate android and sailfish minimal instead
+			if strings.HasPrefix(target, "sailfish") || strings.HasPrefix(target, "android") || strings.HasPrefix(target, "asteroid") { //TODO: generate android and sailfish minimal instead
+				fmt.Printf("Moc() at //TODO: generate android and sailfish minimal instead")
+				fmt.Printf("%s generate %s\n", filepath.Join(utils.GOBIN(), "qtsetup"), target)
 				cmd := exec.Command(filepath.Join(utils.GOBIN(), "qtsetup"), "generate", target)
 				cmd.Dir = path
 				utils.RunCmd(cmd, "run setup")
@@ -86,9 +90,11 @@ func Moc(path, target, tags string, fast, slow, deploying bool, skipSetup bool) 
 }
 
 func moc(path, target, tags string, fast, slow, root bool, l int, dirty bool) {
+	fmt.Printf("moc(%s, %s, %s)\n", path, target, tags)
 	utils.Log.WithField("path", path).WithField("target", target).Debug("start Moc")
 
 	if target == "js" || target == "wasm" || utils.QT_NOT_CACHED() { //TODO: remove for module support + resolve dependencies
+		fmt.Println("moc().dirty = true")
 		dirty = true
 	}
 
@@ -218,6 +224,7 @@ func moc(path, target, tags string, fast, slow, root bool, l int, dirty bool) {
 		}
 	}
 
+	fmt.Printf("moc(): found %d moc structs\n", len(classes))
 	utils.Log.WithField("path", path).Debugln("found", len(classes), "moc structs")
 	if len(classes) == 0 {
 		return
@@ -404,6 +411,7 @@ func moc(path, target, tags string, fast, slow, root bool, l int, dirty bool) {
 		utils.Log.WithField("path", path).Debug("skipping already cached moc")
 	} else {
 		if !utils.QT_GEN_GO_WRAPPER() {
+			fmt.Printf("moc():414\n")
 			if err := utils.SaveBytes(filepath.Join(path, "moc.cpp"), templater.CppTemplate(parser.MOC, templater.MOC, target, tags)); err != nil {
 				return
 			}

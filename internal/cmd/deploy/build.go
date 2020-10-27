@@ -18,7 +18,9 @@ import (
 )
 
 func build(mode, target, path, ldFlagsCustom, tagsCustom, name, depPath string, fast, comply bool) {
+	fmt.Printf("build(mod =%s, target = %s, path = %s, ldFlagsCustom = %s, tagsCustom = %s, name = %s, depPath = %s)\n", mode, target, path, ldFlagsCustom, tagsCustom, name, depPath)
 	env, tags, ldFlags, out := cmd.BuildEnv(target, name, depPath)
+	fmt.Printf("BuildEnv:\nenv = %+v\ntags = %+v\nldFLags = %+v\nout = %+v\n", env, tags, ldFlags, out)
 	if ((!fast || utils.QT_STUB()) && !utils.QT_FAT()) || target == "js" || target == "wasm" {
 		tags = append(tags, "minimal")
 	}

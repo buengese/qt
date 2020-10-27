@@ -27,6 +27,7 @@ func CgoTemplate(module, path, target string, mode int, ipkg, tags string) (o st
 }
 
 func CgoTemplateSafe(module, path, target string, mode int, ipkg, tags string, libs []string) (o string) {
+	fmt.Printf("CgoTemplateSafe(module = %s, path = %s, target = %s, mode = %d, ipkg = %s, tags = %s, lib = %v)\n", module, path, target, mode, ipkg, tags, libs)
 	return cgoTemplate(module, path, target, mode, ipkg, tags, libs)
 }
 
@@ -799,6 +800,7 @@ func createCgo(module, path, target string, mode int, ipkg, tags string) string 
 }
 
 func CgoFileNames(path string, target string, mode int) []string {
+	fmt.Printf("CgoFileNames(path = %s, target = %s, mod = %d)\n", path, target, mode)
 	return cgoFileNamesRecursive(path, target, mode, true)
 }
 

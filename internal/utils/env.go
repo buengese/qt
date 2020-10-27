@@ -280,7 +280,12 @@ func ToolPath(tool, target string) string {
 		return filepath.Join("/srv/mer/targets/SailfishOS-"+QT_SAILFISH_VERSION()+"-i486/usr/lib/qt5/bin/", tool)
 		//TODO support indirect access on desktop: return filepath.Join(os.Getenv("HOME"), ".config", "SailfishOS-SDK", "mer-sdk-tools", "MerSDK", "SailfishOS-i486", tool)
 	case "asteroid":
-		//TODO:
+		fmt.Println("ToolPath(asteroid)")
+		path := filepath.Join(QT_DIR(), QT_VERSION_MAJOR(), "gcc_64", "bin", tool)
+		if !ExistsDir(filepath.Join(QT_DIR(), QT_VERSION_MAJOR())) {
+			path = filepath.Join(QT_DIR(), QT_VERSION(), "gcc_64", "bin", tool)
+		}
+		return path
 	case "rp1", "rpi2", "rpi3":
 		return filepath.Join(QT_DIR(), QT_VERSION_MAJOR(), target, "bin", tool)
 	case "wasm", "js":

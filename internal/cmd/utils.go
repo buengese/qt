@@ -45,6 +45,7 @@ func IsStdPkg(pkg string) bool {
 
 //TODO:
 func GetImports(path, target, tagsCustom string, level int, onlyDirect bool) []string {
+	fmt.Printf("GetImports(path = %s, target = %s, tagsCustom = %s, level = %d, onlyDirect = %v)\n", path, target, tagsCustom, level, onlyDirect)
 	utils.Log.WithField("path", path).WithField("level", level).Debug("get imports")
 
 	env, tags, _, _ := BuildEnv(target, "", "")
@@ -228,6 +229,7 @@ func GetImports(path, target, tagsCustom string, level int, onlyDirect bool) []s
 	for k := range importMap {
 		imports = append(imports, k)
 	}
+	fmt.Printf("Found imports: %v\n", imports)
 	return imports
 }
 
@@ -261,9 +263,14 @@ func ImportsFlutter() (o bool) {
 	return
 }
 
-func CleanupRegisteredImportsForCI() { importsQmlOrQuick = ""; importsInterop = ""; importsFlutter = "" }
+func CleanupRegisteredImportsForCI() {
+	importsQmlOrQuick = ""
+	importsInterop = ""
+	importsFlutter = ""
+}
 
 func GetGoFiles(path, target, tagsCustom string) []string {
+	fmt.Printf("GetGoFiles(%s, %s, %s)\n", path, target, tagsCustom)
 	utils.Log.WithField("path", path).WithField("target", target).WithField("tagsCustom", tagsCustom).Debug("get go files")
 
 	env, tags, _, _ := BuildEnv(target, "", "")

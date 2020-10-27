@@ -84,6 +84,7 @@ func Install(target string, docker, vagrant, failfast bool) {
 						cmd.Env = append(cmd.Env, fmt.Sprintf("%v=%v", key, value))
 					}
 				}
+				fmt.Printf("Pos1 - Run command: %+v\n", cmd)
 				utils.RunCmdOptional(cmd, fmt.Sprintf("failed to create dynamic lib for %v (%v) on %v", target, strings.ToLower(module), runtime.GOOS))
 
 				if !(target == "js" || target == "wasm") {
@@ -126,6 +127,7 @@ func Install(target string, docker, vagrant, failfast bool) {
 			}
 		}
 
+		fmt.Printf("Pos2 - Run cmd: %+v\n", cmd)
 		if msg, err := utils.RunCmdOptionalError(cmd, fmt.Sprintf("install %v", strings.ToLower(module))); err != nil {
 			println(msg)
 			failed = append(failed, strings.ToLower(module))

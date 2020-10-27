@@ -54,6 +54,7 @@ func LoadModules(target string) {
 }
 
 func LoadModulesM(target string) {
+	fmt.Printf("LoadModulesM(%s)\n", target)
 	State.Target = target
 
 	libs := GetLibs()

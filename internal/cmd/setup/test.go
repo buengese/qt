@@ -124,6 +124,7 @@ func Test(target string, docker, vagrant bool, vagrantsystem string) {
 				"sailfish": []string{"listview", "listview_variant"},
 			}
 		} else {
+			fmt.Printf("Normal test cases\n")
 			examples = map[string][]string{
 				"showcases": []string{"wallet"},
 

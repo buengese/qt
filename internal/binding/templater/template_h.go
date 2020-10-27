@@ -10,6 +10,7 @@ import (
 )
 
 func HTemplate(m string, mode int, tags string) []byte {
+	fmt.Printf("CppTemplate(module = %s, mode = %v, tags = %s)\n", m, mode, tags)
 	utils.Log.WithField("module", m).Debug("generating h")
 
 	var bb = new(bytes.Buffer)
