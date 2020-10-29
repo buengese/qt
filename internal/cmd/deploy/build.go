@@ -58,6 +58,10 @@ func build(mode, target, path, ldFlagsCustom, tagsCustom, name, depPath string, 
 		if (fast || utils.QT_PKG_CONFIG() || utils.QT_STATIC()) && !cmd.ImportsFlutter() {
 			env["CGO_LDFLAGS"] = strings.Replace(env["CGO_LDFLAGS"], "-Wl,-rpath,$ORIGIN/lib -Wl,--disable-new-dtags", "", -1)
 		}
+	case "asteroid":
+		if fast || utils.QT_STATIC() {
+			env["CGO_LDFLAGS"] = strings.Replace(env["CGO_LDFLAGS"], "-Wl,-rpath,$ORIGIN/lib -Wl,--disable-new-dtags", "", -1)
+		}
 	}
 
 	var pattern string
@@ -106,6 +110,7 @@ func build(mode, target, path, ldFlagsCustom, tagsCustom, name, depPath string, 
 		cmd.Env = append(cmd.Env, fmt.Sprintf("%v=%v", key, value))
 	}
 
+	fmt.Printf("qtDeploy -> build: %+v\n", cmd)
 	utils.RunCmd(cmd, fmt.Sprintf("build for %v on %v", target, runtime.GOOS))
 
 	if target == "darwin" && !fast {

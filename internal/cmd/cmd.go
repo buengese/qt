@@ -924,13 +924,15 @@ func BuildEnv(target, name, depPath string) (map[string]string, []string, []stri
 			"GOARM":  "7",
 
 			"CGO_ENABLED": "1",
-			"CC":          "/usr/local/oecore-x86_64/sysroots/x86_64-oesdk-linux/usr/bin/arm-oe-linux-gnueabi/arm-oe-linux-gnueabi-gcc -march=armv7ve -mfpu=neon -mfloat-abi=hard",
-			"CXX":         "/usr/local/oecore-x86_64/sysroots/x86_64-oesdk-linux/usr/bin/arm-oe-linux-gnueabi/arm-oe-linux-gnueabi-gcc -march=armv7ve -mfpu=neon -mfloat-abi=hard",
+			"CC":          "/usr/local/oecore-x86_64/sysroots/x86_64-oesdk-linux/usr/bin/arm-oe-linux-gnueabi/arm-oe-linux-gnueabi-gcc -march=armv7ve -mfpu=neon -mfloat-abi=hard --sysroot=/usr/local/oecore-x86_64/sysroots/armv7vehf-neon-oe-linux-gnueabi", // sysroot probably not needed
+			"CXX":         "/usr/local/oecore-x86_64/sysroots/x86_64-oesdk-linux/usr/bin/arm-oe-linux-gnueabi/arm-oe-linux-gnueabi-g++ -march=armv7ve -mfpu=neon -mfloat-abi=hard --sysroot=/usr/local/oecore-x86_64/sysroots/armv7vehf-neon-oe-linux-gnueabi", // sysroot probably not needed
 
 			"CPATH":        "/usr/local/oecore-x86_64/sysroots/armv7vehf-neon-oe-linux-gnueabi/usr/include",
 			"LIBRARY_PATH": "/usr/local/oecore-x86_64/sysroots/armv7vehf-neon-oe-linux-gnueabi/usr/lib",
 
-			"CGO_LDFLAGS": "--sysroot=/usr/local/oecore-x86_64/sysroots/armv7vehf-neon-oe-linux-gnueabi",
+			"CGO_LDFLAGS": "--sysroot=/usr/local/oecore-x86_64/sysroots/armv7vehf-neon-oe-linux-gnueabi -mfpu=neon -mfloat-abi=hard",
+			"CGO_CFLAGS":  "--sysroot=/usr/local/oecore-x86_64/sysroots/armv7vehf-neon-oe-linux-gnueabi -mfpu=neon -mfloat-abi=hard",
+			//"CGO_CXXFLAGS": "--sysroot=/usr/local/oecore-x86_64/sysroots/armv7vehf-neon-oe-linux-gnueabi -mfpu=neon -mfloat-abi=hard", // probably not needed
 		}
 
 	case "sailfish-emulator":

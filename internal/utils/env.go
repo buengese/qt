@@ -281,11 +281,7 @@ func ToolPath(tool, target string) string {
 		//TODO support indirect access on desktop: return filepath.Join(os.Getenv("HOME"), ".config", "SailfishOS-SDK", "mer-sdk-tools", "MerSDK", "SailfishOS-i486", tool)
 	case "asteroid":
 		fmt.Println("ToolPath(asteroid)")
-		path := filepath.Join(QT_DIR(), QT_VERSION_MAJOR(), "gcc_64", "bin", tool)
-		if !ExistsDir(filepath.Join(QT_DIR(), QT_VERSION_MAJOR())) {
-			path = filepath.Join(QT_DIR(), QT_VERSION(), "gcc_64", "bin", tool)
-		}
-		return path
+		return filepath.Join("/usr/local/oecore-x86_64/sysroots/x86_64-oesdk-linux/usr/bin/", tool)
 	case "rp1", "rpi2", "rpi3":
 		return filepath.Join(QT_DIR(), QT_VERSION_MAJOR(), target, "bin", tool)
 	case "wasm", "js":
