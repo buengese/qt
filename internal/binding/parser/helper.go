@@ -41,8 +41,9 @@ const (
 	MOC = "moc"
 )
 
-func UseJs() bool   { return State.Target == "js" || State.Target == "wasm" }
-func UseWasm() bool { return State.Target == "wasm" }
+func UseJs() bool       { return State.Target == "js" || State.Target == "wasm" }
+func UseWasm() bool     { return State.Target == "wasm" }
+func UseAsteroid() bool { return State.Target == "asteroid" }
 
 func IsPackedList(v string) bool {
 	return (strings.HasPrefix(v, "QList<") ||

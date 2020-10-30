@@ -304,6 +304,20 @@ func (c *Class) IsSupported() bool {
 		}
 	}
 
+	if UseAsteroid() {
+		switch c.Name {
+		case "QSessionManager", "QGraphicsSvgItem", "QSqlRelationalDelegate", "QVideoWidgetControl": // QPlatformSessionManager;
+			{
+				c.Access = "unsupported_isBlockedClass"
+				return false
+			}
+		}
+		if c.IsSubClassOf("QWidget") {
+			c.Access = "unsupported_isBlockedClass"
+			return false
+		}
+	}
+
 	switch c.Name {
 	case
 		"QString", "QStringList", //mapped to primitive
@@ -392,7 +406,7 @@ func (c *Class) IsSupported() bool {
 		}
 	}
 
-	if strings.HasPrefix(c.Name, "QOpenGL") && (os.Getenv("DEB_TARGET_ARCH_CPU") == "arm" || (strings.HasPrefix(State.Target, "android") && utils.QT_FAT())) { //TODO: block indiv classes for fat android build instead
+	if strings.HasPrefix(c.Name, "QOpenGL") && (os.Getenv("DEB_TARGET_ARCH_CPU") == "arm" || ((strings.HasPrefix(State.Target, "android") || strings.HasPrefix(State.Target, "asteroid")) && utils.QT_FAT())) { //TODO: block indiv classes for fat android build instead
 		c.Access = "unsupported_isBlockedClass"
 		return false
 	}

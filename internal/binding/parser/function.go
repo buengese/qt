@@ -300,6 +300,19 @@ func (f *Function) IsSupported() bool {
 		}
 	}
 
+	if UseAsteroid() {
+		if f.Fullname == "QGuiApplication::isSessionRestored" || f.Fullname == "QGuiApplication::sessionId" ||
+			f.Fullname == "QGuiApplication::sessionKey" || f.Fullname == "QGuiApplication::isSavingSession" ||
+			f.Fullname == "QGuiApplication::isFallbackSessionManagementEnabled" || f.Fullname == "QGuiApplication::setFallbackSessionManagementEnabled" ||
+			f.Fullname == "QGuiApplication::commitDataRequest" || f.Fullname == "QGuiApplication::saveStateRequest" ||
+			f.Fullname == "QCamera::SetViewfinder" || f.Fullname == "QMediaPlayer::SetVideoOutput" {
+			if !strings.Contains(f.Access, "unsupported") {
+				f.Access = "unsupported_isBlockedFunction"
+			}
+			return false
+		}
+	}
+
 	if utils.QT_VERSION_NUM() >= 5080 {
 		if f.Fullname == "QJSEngine::newQMetaObject" && f.OverloadNumber == "2" ||
 			f.Fullname == "QScxmlTableData::instructions" || f.Fullname == "QScxmlTableData::dataNames" ||
