@@ -1,4 +1,4 @@
-// +build !minimal
+// +build !minimal,!asteroid
 
 package widgets
 
@@ -7,7 +7,6 @@ import (
 	"github.com/therecipe/qt/gui"
 	"github.com/therecipe/qt/internal"
 	"github.com/therecipe/qt/interop/gow"
-	"unsafe"
 )
 
 type QAbstractButton struct {
