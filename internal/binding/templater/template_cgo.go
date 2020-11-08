@@ -164,12 +164,17 @@ func cgoSailfish(module, mocPath string, mode int, pkg string, libs []string) {
 	}
 }
 
-func cgoAsteroid(module, mocPath string, mode int, pkg string) {
+func cgoAsteroid(module, mocPath string, mode int, pkg string, libs []string) {
+	fmt.Printf("cgoAsteroid(module = %s, mocPath = %s, mode = %d, pkg = %s)\n", module, mocPath, mode, pkg)
+	fmt.Printf("cgoAsteroid() parser.LibDeps[parser.MOC] = %v\n", parser.LibDeps[parser.MOC])
 	var (
-		bb   = new(bytes.Buffer)
-		libs = cleanLibs(module, mode)
+		bb = new(bytes.Buffer)
 	)
 	defer bb.Reset()
+
+	if mode != MOC {
+		libs = cleanLibs(module, mode)
+	}
 
 	fmt.Fprintf(bb, "// +build ${BUILDTARGET}%v\n\n", func() string {
 		if mode == MINIMAL {
@@ -189,8 +194,8 @@ func cgoAsteroid(module, mocPath string, mode int, pkg string) {
 	}())
 	fmt.Fprint(bb, "/*\n")
 
-	fmt.Fprint(bb, "#cgo CFLAGS: -pipe -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -feliminate-unused-debug-types -fexceptions -fstack-protector --param=ssp-buffer-size=4 -Wformat -Wformat-security -fmessage-length=0 -march=armv7ve -mfloat-abi=softfp -mfpu=neon -mthumb -Wno-psabi -fPIC -fvisibility=hidden -Wall -W -D_REENTRANT -fPIE\n")
-	fmt.Fprint(bb, "#cgo CXXFLAGS: -pipe -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -feliminate-unused-debug-types -fexceptions -fstack-protector --param=ssp-buffer-size=4 -Wformat -Wformat-security -fmessage-length=0 -march=armv7ve -mfloat-abi=softfp -mfpu=neon -mthumb -Wno-psabi -fPIC -fvisibility=hidden -Wall -W -D_REENTRANT -fPIE\n")
+	fmt.Fprint(bb, "#cgo CFLAGS: -pipe -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -feliminate-unused-debug-types -fexceptions -fstack-protector --param=ssp-buffer-size=4 -Wformat -Wformat-security -fmessage-length=0 -march=armv7ve -mfloat-abi=hard -mfpu=neon -mthumb -Wno-psabi -fPIC -fvisibility=hidden -Wall -W -D_REENTRANT -fPIE\n")
+	fmt.Fprint(bb, "#cgo CXXFLAGS: -std=gnu++11 -pipe -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -feliminate-unused-debug-types -fexceptions -fstack-protector --param=ssp-buffer-size=4 -Wformat -Wformat-security -fmessage-length=0 -march=armv7ve -mfloat-abi=hard -mfpu=neon -mthumb -Wno-psabi -fPIC -fvisibility=hidden -Wall -W -D_REENTRANT -fPIE\n")
 
 	fmt.Fprint(bb, "#cgo CXXFLAGS: -DQT_NO_DEBUG")
 	for _, m := range libs {
@@ -198,7 +203,7 @@ func cgoAsteroid(module, mocPath string, mode int, pkg string) {
 	}
 	fmt.Fprint(bb, "\n")
 
-	fmt.Fprintf(bb, "#cgo CXXFLAGS: -I%[1]s/usr/include/c++/6.2.0/arm-oe-linux-gnueabi -I%[1]s/usr/include/c++/6.2.0  -I%[1]s/usr/lib/mkspecs -I%[1]s/usr/include -I%[1]s/usr/include/mdeclarativecache5 -I%[1]s/usr/include/resource/qt5\n", os.Getenv("OECORE_TARGET_SYSROOT"))
+	fmt.Fprintf(bb, "#cgo CXXFLAGS: -I%[1]s/usr/include/c++/8.3.0/arm-oe-linux-gnueabi -I%[1]s/usr/include/c++/8.3.0  -I%[1]s/usr/lib/mkspecs/linux-oe-g++ -I%[1]s/usr/include -I%[1]s/usr/include/mdeclarativecache5 -I%[1]s/usr/include/resource/qt5\n", os.Getenv("OECORE_TARGET_SYSROOT"))
 
 	fmt.Fprint(bb, "#cgo CXXFLAGS:")
 	for _, m := range libs {

@@ -20,6 +20,7 @@ import (
 var exportedFunctions []string
 var CleanupDepsForCI = func() {}
 
+// TODO: understand this code find a better way to blacklist widgets removing all dependencies
 func CppTemplate(module string, mode int, target, tags string) []byte {
 	fmt.Printf("CppTemplate(module = %s, mode = %v, target = %s, tags = %s)\n", module, mode, target, tags)
 	utils.Log.WithField("module", module).Debug("generating cpp")
@@ -512,6 +513,7 @@ func CppTemplate(module string, mode int, target, tags string) []byte {
 	return preambleCpp(module, bb.Bytes(), mode, target, tags)
 }
 
+// TODO: understand this code find a better way to blacklist widgets removing all dependencies
 func preambleCpp(module string, input []byte, mode int, target, tags string) []byte {
 	fmt.Printf("preambleCpp(%s, .., %s)\n", module, target)
 	var bb = new(bytes.Buffer)

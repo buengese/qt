@@ -32,6 +32,7 @@ func CgoTemplateSafe(module, path, target string, mode int, ipkg, tags string, l
 }
 
 func cgoTemplate(module, path, target string, mode int, ipkg, tags string, libs []string) (o string) {
+	fmt.Printf("CgoTemplate(module = %s, path = %s, target = %s, mode = %d, ipkg = %s, tags = %s, lib = %v)\n", module, path, target, mode, ipkg, tags, libs)
 	utils.Log.WithField("module", module).WithField("path", path).WithField("target", target).WithField("mode", mode).WithField("pkg", ipkg).Debug("running cgoTemplate")
 
 	if utils.UseGOMOD(utils.GoQtPkgPath("core")) {
@@ -61,12 +62,13 @@ func cgoTemplate(module, path, target string, mode int, ipkg, tags string, libs 
 			return
 		}
 	}
+	fmt.Printf("cgoTemplate() parser.LibDeps[parser.MOC] = %v\n", parser.LibDeps[parser.MOC])
 
 	switch target {
 	case "sailfish", "sailfish-emulator":
 		cgoSailfish(module, path, mode, ipkg, libs) //TODO:
 	case "asteroid":
-		cgoAsteroid(module, path, mode, ipkg) //TODO:
+		cgoAsteroid(module, path, mode, ipkg, libs) //TODO:
 	default:
 		createProject(module, path, target, mode, libs)
 		createMakefile(module, path, target, mode)
@@ -350,6 +352,7 @@ func createMakefile(module, path, target string, mode int) {
 			"MER_SSH_USERNAME=mersdk",
 		}
 	case "asteroid":
+		cmd.Args = append(cmd.Args, []string{"-spec", "linux-g++"}...)
 	case "rpi1":
 		cmd.Args = append(cmd.Args, []string{"-spec", "devices/linux-rasp-pi-g++"}...)
 	case "rpi2":
